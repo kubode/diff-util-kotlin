@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DiffUtils Sample</string>
+    <string name="retry">Retry</string>
+</resources>

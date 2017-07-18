@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '26.0.0'
+    defaultConfig {
+        applicationId 'com.github.kubode.diffutilssample'
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName '1.0'
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets.all {
+        java.srcDirs += "src/${name}/kotlin"
+    }
+}
+
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+def versions = [
+        'support' : '25.4.0',
+        'retrofit': '2.3.0',
+]
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:${versions.support}"
+    implementation "com.android.support:recyclerview-v7:${versions.support}"
+    implementation "com.android.support:design:${versions.support}"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.1'
+    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
+    implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
+    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.github.pardom:redux-kotlin:1.2.1'
+    testImplementation 'junit:junit:4.12'
+}
