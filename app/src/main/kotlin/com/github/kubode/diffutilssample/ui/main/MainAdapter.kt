@@ -14,17 +14,21 @@ class MainAdapter(
         private val onRetry: () -> Unit
 ) : RecyclerView.Adapter<AbstractViewHolder>() {
 
+    private fun State.toItems(): List<Item> {
+        val items = arrayListOf<Item>()
+        items += repos.map { Item.Repo(it.id, it.fullName, it.description) }
+        if (isLoading || isAppending) items += Item.Loading
+        error?.let { items += Item.Retry(it) }
+        return items
+    }
+
     var state: State = initialState
         set(value) {
             field = value
-            val items = arrayListOf<Item>()
-            items += value.repos.map { Item.Repo(it.id, it.fullName, it.description) }
-            if (value.isLoading || value.isAppending) items += Item.Loading
-            value.error?.let { items += Item.Retry(it) }
-            this.items = items
+            this.items = value.toItems()
         }
 
-    private var items: List<Item> by Delegates.observable(emptyList()) { _, old, new ->
+    private var items: List<Item> by Delegates.observable(initialState.toItems()) { _, old, new ->
         val start = System.currentTimeMillis()
         calculateDiff(old, new).dispatchUpdatesTo(this)
         Log.v("MainAdapter", "calculateDiff and dispatchUpdatesTo finished in ${System.currentTimeMillis() - start}ms.")
